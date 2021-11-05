@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-void main() => runApp(const AutocompleteExampleApp());
+import 'package:weather_app/data/model/city_info.dart';
+import 'package:weather_app/data/local/cities_names_local_database.dart';
+
+Future<void> main() async{
+
+  await Hive.initFlutter();
+  Hive.registerAdapter(CityAdapter());
+  await Hive.openBox<City>('citiesList');
+
+  runApp(AutocompleteExampleApp());
+}
 
 class AutocompleteExampleApp extends StatelessWidget {
-  const AutocompleteExampleApp({Key? key}) : super(key: key);
+  AutocompleteExampleApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -48,19 +59,31 @@ class SearchBar extends StatefulWidget {
 
 class _SearchBarState extends State<SearchBar> {
 
+  //crea una instancia de la base de datos de nombres de ciudades
+  CityNamesDatabaseConnection cityNames = CityNamesDatabaseConnection();
+  bool initialized = false;
   String _searchText = "";
-  List<String> _options = ['Bogotá'];
+  List<String> _options = [''];
 
 
   @override
   Widget build(BuildContext context) {
     return Autocomplete(optionsBuilder: (TextEditingValue textEditingValue){
 
+      if(!initialized){
+        cityNames.onInit();
+        initialized = true;
+      }
+
         if (textEditingValue.text == '') {
           return const Iterable<String>.empty();
         }
 
-        //en esta parte se debe hacer la query
+        //Hace la query de nombres de ciudad
+        if (textEditingValue.text.length >= 3){
+          _options = cityNames.searchCities(textEditingValue.text);
+        }
+
         return _options;
       },
 
