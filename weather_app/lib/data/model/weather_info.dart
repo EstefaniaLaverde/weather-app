@@ -1,17 +1,19 @@
+
 class WeatherInfo {
-  String? coord;
-  String? weather;
+
+  Map<String,dynamic>? coord;
+  Map<String,dynamic>? weather;
   String? base;
-  String? main;
+  Map<String,dynamic>? main;
   int? visibility;
-  String? wind;
-  String? clouds;
+  Map<String,dynamic>? wind;
+  Map<String,dynamic>? clouds;
   int? dt;
-  String? sys;
+  Map<String,dynamic>? sys;
   int? timezone;
   int? id;
   String? name;
-  String? cod;
+  int? cod;
 
   WeatherInfo({
     required this.coord,
@@ -30,8 +32,9 @@ class WeatherInfo {
   });
 
   WeatherInfo.fromJson(Map<String, dynamic> json) {
-    coord = json['coord'];
-    weather = json["weather"];
+
+    coord = json["coord"];
+    weather = json["weather"][0];
     base = json["base"];
     main = json["main"];
     visibility = json["visibility"];
@@ -43,24 +46,18 @@ class WeatherInfo {
     id = json["id"];
     name = json["name"];
     cod = json["code"];
+
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['coord'] = coord;
-    data["weather"] = weather;
-    data["base"] = base;
-    data["main"] = main;
-    data["visibility"] = visibility;
-    data["wind"] = wind;
-    data["clouds"] = clouds;
-    data["dt"] = dt;
-    data["sys"] = sys;
-    data["timezone"] = timezone;
-    data["id"] = id;
-    data["name"] = name;
-    data["code"] = coord;
+  String get temperature => main!['temp'].toString();
+  String get sensation => main!['feels_like'].toString();
+  String get tempMin => main!['temp_min'].toString();
+  String get tempMax => main!['tempMax'].toString();
+  String get pressure => main!['pressure'].toString();
+  String get humidity => main!['humidity'].toString();
 
-    return data;
-  }
+  String get weatherDescription => weather!['description'];
+
+
+
 }
