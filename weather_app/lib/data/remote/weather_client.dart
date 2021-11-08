@@ -1,7 +1,53 @@
+import 'dart:developer';
+import 'dart:html';
+
+import 'package:flutter/material.dart';
 import 'package:loggy/loggy.dart';
 import '../model/weather_info.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
+
+void main() => runApp(TestWeatherClient());
+
+class TestWeatherClient extends StatefulWidget {
+
+  @override
+  _TestWeatherClientState createState() => _TestWeatherClientState();
+}
+
+class _TestWeatherClientState extends State<TestWeatherClient> {
+  WeatherClient client = WeatherClient('4fd881dad6fd9eb5278d268a9d73df6f');
+
+  String msg = 'intentoooo';
+
+    getText() async{
+    List<WeatherInfo> list = await client.getItems('bogota');
+
+    setState(() {
+      msg = list[0].temperature;
+    });
+
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        body: Column(
+          children: <Widget>[
+            Container(
+              child:  Text(msg),
+            ),
+            TextButton(onPressed: getText, child: Text('push me')),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+
 
 class WeatherClient {
   static const baseUrl = "https://api.openweathermap.org";
@@ -12,42 +58,37 @@ class WeatherClient {
   WeatherClient(this.apiKey);
 
   Future<List<WeatherInfo>> getItems(String city) async {
-    var uri = Uri.parse('https://api.openweather.org/data/2.5/weather')
-        .resolveUri(Uri(queryParameters: {
-      "q": "city",
-      "appid": apiKey,
-    }));
 
-    logInfo('Client getItems URI ${uri.toString()}');
+    String url = baseUrl + '/data/2.5/weather?q=' + city + '&appid=' + apiKey;
+    log('Consulta a: ' + url);
 
     try {
-      final response = await http.get(uri).timeout(Duration(seconds: 1));
+
+      final response = await http.get(Uri.parse(url));
 
       if (response.statusCode == 200) {
-        logInfo("Got code 200");
-        var jsonResponse = convert.jsonDecode(response.body);
+        log("Got code 200");
 
-        int itemCount = jsonResponse['response']['total'];
-        logInfo("We got $itemCount items");
-
-        if (itemCount == 0) {
-          logError('No info came from the api :(');
-        }
+        var jsonResponse = convert.jsonDecode(response.body) as Map<String, dynamic>;
+        log('Response is: ' + jsonResponse.toString());
 
         List<WeatherInfo> output = [];
 
-        for (var item in jsonResponse['response']['results']) {
-          output.add(WeatherInfo.fromJson(item));
-        }
-        logInfo("Client return ok");
+        output.add(WeatherInfo.fromJson(jsonResponse));
         return Future.value(output);
+
       } else {
+
         logError('Client error ${response.statusCode}');
         return Future.error([]);
+
       }
+
     } catch (e) {
+      log(e.toString());
       logError('Client error Timeout');
       return Future.error('Client error Timeout');
     }
   }
+
 }
