@@ -1,53 +1,9 @@
 import 'dart:developer';
-import 'dart:html';
-
-import 'package:flutter/material.dart';
 import 'package:loggy/loggy.dart';
-import '../model/weather_info.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
-void main() => runApp(TestWeatherClient());
-
-class TestWeatherClient extends StatefulWidget {
-
-  @override
-  _TestWeatherClientState createState() => _TestWeatherClientState();
-}
-
-class _TestWeatherClientState extends State<TestWeatherClient> {
-  WeatherClient client = WeatherClient('4fd881dad6fd9eb5278d268a9d73df6f');
-
-  String msg = 'intentoooo';
-
-    getText() async{
-    List<WeatherInfo> list = await client.getItems('bogota');
-
-    setState(() {
-      msg = list[0].temperature;
-    });
-
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Column(
-          children: <Widget>[
-            Container(
-              child:  Text(msg),
-            ),
-            TextButton(onPressed: getText, child: Text('push me')),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-
-
+import '../model/weather_info.dart';
 
 class WeatherClient {
   static const baseUrl = "https://api.openweathermap.org";
