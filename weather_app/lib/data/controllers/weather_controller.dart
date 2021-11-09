@@ -1,70 +1,5 @@
-import 'dart:developer';
-
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:weather_app/data/data_repository.dart';
-import 'package:weather_app/data/model/weather_info.dart';
-
-
-void main() => runApp(
-    TestDataRepo()
-);
-
-class TestDataRepo extends StatefulWidget {
-
-
-  @override
-  _TestDataRepoState createState() => _TestDataRepoState();
-}
-
-class _TestDataRepoState extends State<TestDataRepo> {
-
-
-
-  TextEditingController textController1 = TextEditingController();
-  TextEditingController textController2 = TextEditingController();
-  TextEditingController textController3 = TextEditingController();
-  String visualizationText = '';
-
-  @override
-  Widget build(BuildContext context) {
-
-    WeatherInfoController controller = Get.put(WeatherInfoController());
-
-    return GetMaterialApp(
-      home: Scaffold(
-        body: Column(
-          children: <Widget>[
-            Obx(() => Text(controller.citiesNames.toString())),
-
-            TextField(controller: textController1,),
-            TextButton(onPressed: ()async{
-               controller.getCityWeather(textController1.text);
-               controller.update();
-            }
-                , child: Text('search and add!')),
-
-            TextField(controller: textController2,),
-            TextButton(onPressed: (){
-              controller.deleteCityWeather(textController2.text);
-              controller.update();
-            }
-                , child: Text('delete and unqueue!')),
-
-            TextField(controller: textController3,),
-            TextButton(onPressed: (){
-              controller.updateCityWeather(textController3.text);
-              controller.update();
-            }
-                , child: Text('update controller!')),
-
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 
 class WeatherInfoController extends GetxController{
@@ -78,9 +13,9 @@ class WeatherInfoController extends GetxController{
   Future<void> onInit() async{
   }
 
-  void getCityWeather(String city){
+  void getCityWeather(String city) async{
 
-     dataBase[0].getCityWeather(city);
+     await dataBase[0].getCityWeather(city);
      dataBase.refresh();
   }
 
@@ -89,8 +24,8 @@ class WeatherInfoController extends GetxController{
     dataBase.refresh();
   }
 
-  void updateCityWeather(String city){
-    dataBase[0].updateCityWeather(city);
+  void updateCityWeather(String city) async {
+    await dataBase[0].updateCityWeather(city);
     dataBase.refresh();
   }
 
