@@ -1,12 +1,11 @@
 //List item
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:like_button/like_button.dart';
-import 'package:loggy/loggy.dart';
+import 'package:weather_app/data/controllers/liked_cities_controller.dart';
 import 'package:weather_app/data/model/weather_info.dart';
 import 'package:weather_app/widgets/info_mini_card.dart';
 
@@ -15,10 +14,21 @@ class WeatherCard extends StatelessWidget {
 
   String cityname;
   late WeatherInfo info;
-  WeatherCard(this.info, this.cityname);
+  LikedCitiesController controller = Get.find();
+  bool liked;
 
-  onLikedButtonTapped() {
-    //Add to favorites
+  WeatherCard(this.info, this.cityname, this.liked);
+
+  Future<bool> onLikedButtonTapped(bool input) async {
+    if (liked) {
+      liked = false;
+      controller.onUnLiked(cityname);
+    } else {
+      liked = true;
+      controller.onLiked(cityname);
+    }
+
+    return true;
   }
 
   @override
@@ -54,12 +64,16 @@ class WeatherCard extends StatelessWidget {
                     Container(
                       alignment: Alignment.center,
                       padding: EdgeInsets.all(10),
-                      child: LikeButton(),
+                      child: LikeButton(
+                        onTap: onLikedButtonTapped,
+                        isLiked: liked,
+                      ),
                     )
                   ],
                 )
               ],
             )));
+
     // return Center(
     //   child: Card(
     //       elevation: 10,

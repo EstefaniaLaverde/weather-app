@@ -1,13 +1,17 @@
 import 'dart:developer';
 
 import 'package:get/get.dart';
+import 'package:weather_app/data/controllers/liked_cities_controller.dart';
 import 'package:weather_app/data/model/weather_info.dart';
 import 'package:weather_app/useCases/weather_reports.dart';
 
 class WeatherInfoController extends GetxController {
   //Variables observables
+
   var _loading = true.obs;
   var _reports = <WeatherInfo>[].obs;
+  LikedCitiesController controller = Get.put(LikedCitiesController());
+  var _initialCities = <String>[].obs;
 
   //Iniciliza WeatherReports
   WeatherReports weatherReports = WeatherReports();
@@ -15,19 +19,26 @@ class WeatherInfoController extends GetxController {
   //Getters
   bool get loading => _loading.value;
   List<WeatherInfo> get reports => _reports;
+  List<String> get initialCities => _initialCities;
 
-  // WeatherInfoController(){
-  //   log("reports: " + _reports.toString());
-  //   onInit();
-  //   log("reports: " + _reports.toString());
-  //   _loading.value = false;
-  //   _reports.refresh();
-  // }
+  WeatherInfoController() {
+    log("Cargando ciudades con like previo ...");
+    onInit();
+  }
 
-  @override
   Future<void> onInit() async {
     getCityWeather('bogota');
     print(_reports.length);
+    //====================================
+    //ESTO ESTA FALLANDO PLS NO CORRER :(
+    //====================================
+
+    initialCities = controller.loadLiked();
+    log("Ciudades con like previo: " + initialCities.toString());
+
+    for (String city in initialCities) {
+      getCityWeather(city);
+    }
   }
 
   Future<bool> getCityWeather(String city) async {

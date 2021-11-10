@@ -48,7 +48,10 @@ class _MyHomePageState extends State<MyHomePage> {
     List<WeatherCard> list = [];
 
     for (var weather in controller.reports) {
-      list.add(WeatherCard(weather, weather.name.toString()));
+      list.add(WeatherCard(weather, weather.name.toString(), false));
+    }
+    for (var likedCity in controller.initialCities) {
+      list.add(WeatherCard(likedCity, likedCity.name.toString(), true));
     }
 
     return MaterialApp(

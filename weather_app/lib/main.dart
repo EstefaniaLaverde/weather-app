@@ -13,7 +13,9 @@ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(CityAdapter());
   await Hive.openBox<City>('citiesList');
-  WeatherInfoController controller = Get.put(WeatherInfoController());
+  await Hive.openBox<City>('favCities');
+  WeatherInfoController controller =
+      Get.put(WeatherInfoController(), permanent: true);
 
   runApp(GetMaterialApp(
     home: Obx(() {
@@ -22,7 +24,10 @@ void main() async {
       } else {
         if (controller.reports.length == 0) {
           print("Buenas aqui ando");
-          controller.getCityWeather("bogota");
+
+          if (controller.initialCities.length == 0) {
+            controller.getCityWeather("bogota");
+          }
         }
         print("Ahora toi aqui");
         return MyHomePage();
