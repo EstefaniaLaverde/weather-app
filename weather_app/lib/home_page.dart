@@ -52,50 +52,89 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     return MaterialApp(
-      title: 'Weather App',
-      home: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Center(
-          child: Column(children: [
-            Container(
-              height: 40,
-            ),
-            Container(
-              padding: EdgeInsets.all(5),
-              height: 40,
-              child: SearchBar(),
-            ),
-            Container(
-              height: 40,
-            ),
-            SingleChildScrollView(
-              child: Stack(
-                children: list,
+        title: 'Weather App',
+        home: Scaffold(
+          appBar: AppBar(title: SearchBar(), actions: <Widget>[
+            // IconButton(onPressed: (){setState(() {
+            //   // isSeaching = !isSeaching;
+            // });}, icon: Icon(Icons.search)),
+          ]),
+          backgroundColor: Colors.grey[200],
+          resizeToAvoidBottomInset: false,
+          body: Column(
+            children: [
+              // Container(
+              //   height: 40,
+              //   color: Colors.blue,
+              // ),
+              // Container(
+              //   padding: EdgeInsets.all(5),
+              //   child: SearchBar(),
+              //   height: 40,
+              // ),
+              // Container(height: 30, color: Colors.blue),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: list,
+                  ),
+                ),
               ),
-            )
-          ]
+            ],
+          ),
+        )
 
-              /*
-            children:  <Widget>[
+        // home: SingleChildScrollView(
+        //   child: Center(
+        //     child: Column(
+        //       children: list,
+        //     ),
+        //   ),
+        // ),
 
-              Container(child: SearchBar(),width: 400,),
-              CarouselSlider.builder(
-                      options: CarouselOptions(
-                        height: 600.0,
-                        autoPlay: true,
-                      ),
-                      itemCount: items.length,
-                      itemBuilder: (context, itemIndex, realIndex) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: items[itemIndex],
-                        );
-                      },
-                    ),
-            ]*/
-              ),
-        ),
-      ),
-    );
+        // home: Scaffold(
+        //   resizeToAvoidBottomInset: false,
+        //   body: Center(
+        //     child: Column(children: [
+        //       Container(
+        //         height: 40,
+        //       ),
+        //       Container(
+        //         padding: EdgeInsets.all(5),
+        //         height: 40,
+        //         child: SearchBar(),
+        //       ),
+        //       Container(
+        //         height: 40,
+        //       ),
+        //       SingleChildScrollView(
+        //         child: Stack(
+        //           children: list,
+        //         ),
+        //       )
+        //     ]
+
+        //         /*
+        //       children:  <Widget>[
+
+        //         Container(child: SearchBar(),width: 400,),
+        //         CarouselSlider.builder(
+        //                 options: CarouselOptions(
+        //                   height: 600.0,
+        //                   autoPlay: true,
+        //                 ),
+        //                 itemCount: items.length,
+        //                 itemBuilder: (context, itemIndex, realIndex) {
+        //                   return Padding(
+        //                     padding: const EdgeInsets.all(8.0),
+        //                     child: items[itemIndex],
+        //                   );
+        //                 },
+        //               ),
+        //       ]*/
+        //         ),
+        //   ),
+        // ),
+        );
   }
 }
