@@ -13,9 +13,9 @@ import 'package:weather_app/widgets/info_mini_card.dart';
 class WeatherCard extends StatelessWidget {
   //const WeatherCard({Key? key}) : super(key: key);
 
-   String cityname;
-   late WeatherInfo info;
-   WeatherCard(this.info, this.cityname);
+  String cityname;
+  late WeatherInfo info;
+  WeatherCard(this.info, this.cityname);
 
   onLikedButtonTapped() {
     //Add to favorites
@@ -25,7 +25,7 @@ class WeatherCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
         child: Card(
-            color: Colors.grey[50],
+            color: Colors.grey[100],
             // elevation: 20,
             // shape: RoundedRectangleBorder(
             //   borderRadius: BorderRadius.circular(15.0),
@@ -44,11 +44,13 @@ class WeatherCard extends StatelessWidget {
 
                 ListBody(
                   children: [
+                    InfoMiniCard('Temperatura', info.temperature + ' °C',
+                        Icon(Icons.thermostat_outlined)),
                     InfoMiniCard(
-                        'Temperatura', info.temperature + ' °C', Icon(Icons.thermostat_outlined)),
-                    InfoMiniCard('Humedad', info.humidity + ' %' , Icon(Icons.opacity)),
+                        'Humedad', info.humidity + ' %', Icon(Icons.opacity)),
                     InfoMiniCard('Viento', ' km/h', Icon(Icons.verified)),
-                    InfoMiniCard('Sensacion', info.sensation + ' °C', Icon(Icons.home)),
+                    InfoMiniCard(
+                        'Sensacion', info.sensation + ' °C', Icon(Icons.home)),
                     Container(
                       alignment: Alignment.center,
                       padding: EdgeInsets.all(10),
