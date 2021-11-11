@@ -9,4 +9,7 @@ class WeatherReports {
   Future<WeatherInfo> getCityInfo(String city) async {
     return await _dataRepo.getCityWeather(city);
   }
+
+  // Future;
+
 }

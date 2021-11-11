@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
@@ -13,12 +14,16 @@ import 'package:weather_app/data/model/city_info.dart';
 class CityNamesDatabaseConnection {
   //busca la caja con el nombre 'citiesList'
   final box = Hive.box<City>('citiesList');
+
+  //busca la caja con el nombre 'favCities'
   final favoriteBox = Hive.box<City>('favCities');
 
   onLiked(String city) {
     City localCity = City(city.toLowerCase().trim(), '');
 
     favoriteBox.put(favoriteBox.length + 1, localCity);
+
+    log("Se guarda la ciudad: " + city);
   }
 
   onUnLiked(String city) {
@@ -29,6 +34,7 @@ class CityNamesDatabaseConnection {
         favoriteBox.deleteAt(i);
       }
     }
+    print("Se desguardo la ciudad " + city);
   }
 
   List<String> loadLikedCities() {

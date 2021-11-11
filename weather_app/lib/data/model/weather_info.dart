@@ -1,15 +1,13 @@
-
 class WeatherInfo {
-
-  Map<String,dynamic>? coord;
-  Map<String,dynamic>? weather;
+  Map<String, dynamic>? coord;
+  Map<String, dynamic>? weather;
   String? base;
-  Map<String,dynamic>? main;
+  Map<String, dynamic>? main;
   int? visibility;
-  Map<String,dynamic>? wind;
-  Map<String,dynamic>? clouds;
+  Map<String, dynamic>? wind;
+  Map<String, dynamic>? clouds;
   int? dt;
-  Map<String,dynamic>? sys;
+  Map<String, dynamic>? sys;
   int? timezone;
   int? id;
   String? name;
@@ -32,7 +30,6 @@ class WeatherInfo {
   });
 
   WeatherInfo.fromJson(Map<String, dynamic> json) {
-
     coord = json["coord"];
     weather = json["weather"][0];
     base = json["base"];
@@ -46,7 +43,6 @@ class WeatherInfo {
     id = json["id"];
     name = json["name"];
     cod = json["code"];
-
   }
 
   String get temperature => main!['temp'].toString();
@@ -55,9 +51,7 @@ class WeatherInfo {
   String get tempMax => main!['tempMax'].toString();
   String get pressure => main!['pressure'].toString();
   String get humidity => main!['humidity'].toString();
+  String get windSpeed => wind!['speed'].toString();
 
   String get weatherDescription => weather!['description'];
-
-
-
 }

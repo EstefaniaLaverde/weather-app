@@ -7,40 +7,36 @@ import 'package:weather_app/useCases/weather_reports.dart';
 
 class WeatherInfoController extends GetxController {
   //Variables observables
-
   var _loading = true.obs;
   var _reports = <WeatherInfo>[].obs;
-  LikedCitiesController controller = Get.put(LikedCitiesController());
-  var _initialCities = <String>[].obs;
+  var _likedCities = <WeatherInfo>[].obs;
 
   //Iniciliza WeatherReports
   WeatherReports weatherReports = WeatherReports();
 
+  //Llama a likedCitiescontroller
+  LikedCitiesController likedController = Get.find();
+
   //Getters
   bool get loading => _loading.value;
   List<WeatherInfo> get reports => _reports;
-  List<String> get initialCities => _initialCities;
+  List<WeatherInfo> get likedCities => _likedCities;
 
+  //Constructor
   WeatherInfoController() {
-    log("Cargando ciudades con like previo ...");
-    onInit();
+    _onInit();
   }
 
-  Future<void> onInit() async {
+  //init
+  @override
+  Future<void> _onInit() async {
     getCityWeather('bogota');
     print(_reports.length);
-    //====================================
-    //ESTO ESTA FALLANDO PLS NO CORRER :(
-    //====================================
 
-    initialCities = controller.loadLiked();
-    log("Ciudades con like previo: " + initialCities.toString());
-
-    for (String city in initialCities) {
-      getCityWeather(city);
-    }
+    getCityWeatherLiked(likedController.loadLiked);
   }
 
+  //===========================functions============================
   Future<bool> getCityWeather(String city) async {
     // Uniformizar city
     city = city.toLowerCase().trim();
@@ -55,11 +51,9 @@ class WeatherInfoController extends GetxController {
 
       // Si no se encuentra la ciudad
     } else {
-      print("entre en el else");
-
       _loading.value = true;
       WeatherInfo local = await weatherReports.getCityInfo(city);
-      _reports.add(local);
+      _reports.insert(0, local);
     }
 
     _loading.value = false;
@@ -67,6 +61,14 @@ class WeatherInfoController extends GetxController {
 
     print("Estos son los reports" + _reports.length.toString());
     return true;
+  }
+
+  //Save city as weatherInfo for liked city name
+  Future<void> getCityWeatherLiked(List<String> likedList) async {
+    for (var city in likedList) {
+      WeatherInfo local = await weatherReports.getCityInfo(city);
+      _likedCities.add(local);
+    }
   }
 
   void deleteCityWeather(String city) {
@@ -80,6 +82,32 @@ class WeatherInfoController extends GetxController {
     }
 
     _reports.refresh();
+  }
+
+  //onLikedCity
+  Future<void> updateFavCityList(String city) async {
+    //Se guarda en la base de datos
+    likedController.onLiked(city);
+    //Se borra de reports
+    deleteCityWeather(city);
+    //Se guarda en likedCities
+    getCityWeatherLiked([city]);
+  }
+
+  //onUnliked
+  Future<void> updateFavCityListUnlike(String city) async {
+    //Se borra de la base de datos
+    likedController.onUnLiked(city);
+
+    //Borrarlo de la lista
+    city = city.toLowerCase().trim();
+
+    for (int i = 0; i < _likedCities.length; i++) {
+      if (_likedCities[i].name!.toLowerCase().trim() == city) {
+        _likedCities.removeAt(i);
+        break;
+      }
+    }
   }
 
   void updateCityWeather(String city) async {

@@ -14,37 +14,36 @@ class WeatherClient {
   WeatherClient(this.apiKey);
 
   Future<List<WeatherInfo>> getItems(String city) async {
-
-    String url = baseUrl + '/data/2.5/weather?q=' + city + '&appid=' + apiKey;
+    String url = baseUrl +
+        '/data/2.5/weather?q=' +
+        city +
+        '&units=metric&appid=' +
+        apiKey +
+        "&lang=es";
     log('Consulta a: ' + url);
 
     try {
-
       final response = await http.get(Uri.parse(url));
 
       if (response.statusCode == 200) {
         log("Got code 200");
 
-        var jsonResponse = convert.jsonDecode(response.body) as Map<String, dynamic>;
+        var jsonResponse =
+            convert.jsonDecode(response.body) as Map<String, dynamic>;
         log('Response is: ' + jsonResponse.toString());
 
         List<WeatherInfo> output = [];
 
         output.add(WeatherInfo.fromJson(jsonResponse));
         return Future.value(output);
-
       } else {
-
         logError('Client error ${response.statusCode}');
         return Future.error([]);
-
       }
-
     } catch (e) {
       log(e.toString());
       logError('Client error Timeout');
       return Future.error('Client error Timeout');
     }
   }
-
 }

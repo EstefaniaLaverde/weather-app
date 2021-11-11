@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:weather_app/data/controllers/weather_controller.dart';
 
-import 'package:weather_app/data/model/city_info.dart';
 import 'package:weather_app/data/local/cities_names_local_database.dart';
 
 // Future<void> main() async{
